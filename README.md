@@ -52,3 +52,19 @@ All of these are coming soon!
 - Auto-spawning relic defenders (armored zombies and skeletons that will fight anyone trying to claim a relic)
 - Claim delays (people will have to wait a certain amount of time near the relic to claim it)
 - Customizable messages (edit a `lang.yml` file to change message text)
+
+## Development
+This guide is for developers looking to modify/build the plugin.
+### Building
+1. Download the source code from this repository.
+2. Make sure you have Java 21 installed on your system.
+3. Open a terminal and navigate to the plugin's directory.
+4. Run `./gradlew build`. 
+5. Find the finished plugin in `build/libs` and upload it to your server's `plugins` folder.
+6. Restart your server, and follow the steps from the setup guide.
+### Contributing
+1. Fork the repository.
+2. Follow the "Building" guide right above.
+3. Make any changes you are interested in adding.
+4. Submit a pull request, making sure to be specific about changes.
+5. The maintainer (me!) will review and merge your pull request. Thanks!
