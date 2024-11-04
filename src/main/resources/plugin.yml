@@ -1,0 +1,19 @@
+name: RelicEvent
+version: '${version}'
+main: com.aelithron.relicevent.RelicEvent
+api-version: '1.21'
+prefix: Relic Event
+authors: [Aelithron]
+depend:
+  - NBTAPI
+description: A relic event, created for the Not-yet-named Server!
+website: https://github.com/aelithron/RelicEvent
+commands:
+  relics:
+    description: Get your relic count. Also used for the leaderboard.
+    aliases:
+      - relic
+  relicmgr:
+    description: An administration command to modify relics.
+    aliases:
+      - relicadmin

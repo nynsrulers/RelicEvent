@@ -1,0 +1,23 @@
+# RelicEvent by Aelithron
+# Plugin for an event, created for the Not-yet-named Server.
+
+# Plugin message prefix
+# Color codes supported, guide: https://wiki.ess3.net/mc
+Prefix: "&6&lRELICS &b❈"
+
+# Event status
+# When set to false, relics cannot be obtained/redeemed.
+# When true, the event will fully function.
+EventEnabled: false
+
+# Redeem block location
+# This determines where players can claim relics.
+RedeemBlockLocation:
+  x: 0
+  y: 0
+  z: 0
+  world: "world"
+
+# The URL for the Discord webhook.
+# To disable this feature, leave this as "CHANGEME".
+DiscordWebhook: "CHANGEME"

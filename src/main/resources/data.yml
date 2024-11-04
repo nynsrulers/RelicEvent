@@ -1,0 +1,20 @@
+# DO NOT EDIT MANUALLY
+# THE PLUGIN MAY BREAK IF YOU EDIT THIS FILE
+# USE IN-GAME COMMANDS ONLY
+
+# Now, with the warning out of the way, welcome to the data file!
+# All relics are stored in the "Relics:" section.
+# Also, player stats are stored in the "Players:" section.
+
+Relics:
+  # The following is an example relic!
+  997864c1-d064-4ae9-8981-d4c0b08f95ad:
+    x: 19999
+    y: 80
+    z: 19999
+    world: "world"
+    found: true
+
+Players:
+  # The following is a real player.
+  eb7ea62d-b7aa-4d6e-b68a-d7e948780f03: 0
