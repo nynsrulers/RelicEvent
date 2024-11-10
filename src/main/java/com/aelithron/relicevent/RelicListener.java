@@ -69,14 +69,32 @@ public class RelicListener implements Listener {
                     String obtainer = NBT.get(itemInInv, nbt -> {
                         return nbt.getString("RE_RelicObtainer");
                     });
+                    String relicID = NBT.get(itemInInv, nbt -> {
+                        return nbt.getString("RE_RelicID");
+                    });
                     if (obtainer == null) {
                         player.sendMessage(plugin.getPrefix() + ChatColor.RED + "This relic redemption has encountered an error. Please message staff immediately! If you are staff, check console for more info.");
-                        plugin.getLogger().severe("Player " + player.getName() + " attempted to redeem a relic. This had a RE_IsRelic tag set to true, but an RE_RelicObtainer of null. This is unintended!");
+                        plugin.getLogger().warning("Player " + player.getName() + " attempted to redeem a relic. This had a RE_IsRelic tag set to true, but an RE_RelicObtainer of null. This is unintended!");
                         return;
                     }
-                    if (!obtainer.equals(player.getUniqueId().toString())) {
+                    if (!obtainer.equals(player.getUniqueId().toString()) && plugin.getConfig().getBoolean("EnforceNoTrade")) {
                         player.sendMessage(plugin.getPrefix() + ChatColor.RED + "You did not obtain this relic, so you may not redeem it.");
                         return;
+                    }
+                    if (relicID == null) {
+                        player.sendMessage(plugin.getPrefix() + ChatColor.RED + "This relic redemption has encountered an error. Please message staff immediately! If you are staff, check console for more info.");
+                        plugin.getLogger().warning("Player " + player.getName() + " attempted to redeem a relic. This had a RE_IsRelic tag set to true, but an RE_RelicID of null. This is unintended!");
+                        return;
+                    }
+                    plugin.reloadDataStore();
+                    if (!Objects.equals(relicID, "admin")) {
+                        if (plugin.dataStore.getBoolean("Relics." + relicID + ".redeemed")) {
+                            player.sendMessage(plugin.getPrefix() + ChatColor.RED + "This relic has already been redeemed!");
+                            plugin.getLogger().warning("Player " + player.getName() + " attempted to redeem a relic tied to an already redeemed relic ID. This should not be possible, and may even be a dupe glitch!");
+                            return;
+                        }
+                        plugin.dataStore.set("Relics." + relicID + ".redeemed", true);
+                        plugin.saveDataStore();
                     }
                     player.getInventory().remove(itemInInv);
                     break;
@@ -117,7 +135,7 @@ public class RelicListener implements Listener {
                     player.sendMessage(plugin.getPrefix() + ChatColor.RED + "The event is currently disabled, sorry!");
                     return;
                 }
-                if (plugin.playerHasRelicItem(player)) {
+                if (plugin.playerHasRelicItem(player) && plugin.getConfig().getBoolean("EnforceNoTrade")) {
                     player.sendMessage(plugin.getPrefix() + ChatColor.RED + "Your relic claim failed, as you already have a relic in your inventory.");
                     player.sendMessage(ChatColor.AQUA + "Please redeem your first relic at spawn before collecting any more.");
                     break;
@@ -137,7 +155,7 @@ public class RelicListener implements Listener {
                 plugin.reloadDataStore();
                 plugin.dataStore.set("Relics." + relicID + ".found", true);
                 plugin.saveDataStore();
-                player.getInventory().addItem(ItemCreator.createRelicItem(player));
+                player.getInventory().addItem(ItemCreator.createRelicItem(player, relicID));
                 player.sendMessage(plugin.getPrefix() + ChatColor.GOLD + "Congrats, you found a relic!");
                 player.sendMessage(ChatColor.GREEN + "Redeem it at spawn for it to count.");
 
@@ -187,6 +205,7 @@ public class RelicListener implements Listener {
         plugin.dataStore.set("Relics." + relicID + ".z", blockPlaceLoc.getBlockZ());
         plugin.dataStore.set("Relics." + relicID + ".world", blockPlaceLoc.getWorld().getName());
         plugin.dataStore.set("Relics." + relicID + ".found", false);
+        plugin.dataStore.set("Relics." + relicID + ".redeemed", false);
         plugin.saveDataStore();
 
         player.sendMessage(plugin.getPrefix() + ChatColor.GREEN + "Successfully added a Relic!");

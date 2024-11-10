@@ -72,7 +72,7 @@ public class RelicAdminCMD implements CommandExecutor {
                 player.sendMessage(plugin.getPrefix() + ChatColor.RED + "Your inventory is full >:3");
                 return false;
             }
-            player.getInventory().addItem(ItemCreator.createRelicItem(finder));
+            player.getInventory().addItem(ItemCreator.createRelicItem(finder, "admin"));
             player.sendMessage(plugin.getPrefix() + ChatColor.GREEN + "a cat delivered you a relic item (finder: " + finder.getName() + ") :3");
             return true;
         }
@@ -124,8 +124,35 @@ public class RelicAdminCMD implements CommandExecutor {
         }
         if (args[0].equalsIgnoreCase("dump")) {
             new RelicDumper(plugin).dumpRelics();
-            sender.sendMessage(plugin.getPrefix(), ChatColor.GREEN + "done dumping the relics!!! :3 (check console)");
+            sender.sendMessage(plugin.getPrefix() + ChatColor.GREEN + "done dumping the relics!!! :3 (check console)");
             return true;
+        }
+        if (args[0].equalsIgnoreCase("setting")) {
+            if (args.length < 3) {
+                sendHelpMessage(sender);
+                return false;
+            }
+            boolean state;
+            if (args[2].equalsIgnoreCase("on")) { state = true; }
+            else if (args[2].equalsIgnoreCase("off")) { state = false; }
+            else {
+                sendHelpMessage(sender);
+                return false;
+            }
+            if (args[1].equalsIgnoreCase("notrade") || args[1].equalsIgnoreCase("EnforceNoTrade")) {
+                plugin.reloadConfig();
+                plugin.getConfig().set("EnforceNoTrade", state);
+                plugin.saveConfig();
+                return true;
+            }
+            if (args[1].equalsIgnoreCase("holdinglimit") || args[1].equalsIgnoreCase("EnforceHoldingLimit")) {
+                plugin.reloadConfig();
+                plugin.getConfig().set("EnforceHoldingLimit", state);
+                plugin.saveConfig();
+                return true;
+            }
+            sendHelpMessage(sender);
+            return false;
         }
         sendHelpMessage(sender);
         return false;
@@ -144,5 +171,7 @@ public class RelicAdminCMD implements CommandExecutor {
         sender.sendMessage(ChatColor.AQUA + "/relicmgr dump: Dumps all relics into a text file, split into found and not found.");
         sender.sendMessage(ChatColor.AQUA + "/relicmgr testdiscord: Send a test through the Discord webhook.");
         sender.sendMessage(ChatColor.AQUA + "/relicmgr reload: Reloads the plugin and all configs.");
+        sender.sendMessage(ChatColor.AQUA + "/relicmgr setting (setting) (on|off): Change a game setting.");
+        sender.sendMessage(ChatColor.GRAY + "Supported settings are notrade (can't redeem others' relics) and holdinglimit (can't hold more than one relic at once).");
     }
 }

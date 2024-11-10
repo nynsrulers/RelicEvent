@@ -21,3 +21,13 @@ RedeemBlockLocation:
 # The URL for the Discord webhook.
 # To disable this feature, leave this as "CHANGEME".
 DiscordWebhook: "CHANGEME"
+
+# Relic item trade prevention
+# If enabled, players cannot redeem relic items from relics they didn't find.
+# This prevents players from giving each other relics.
+EnforceNoTrade: true
+
+# Relic holding limits
+# If enabled, players cannot pick up two relics at the same time.
+# This means that they must redeem the first before collecting the second.
+EnforceHoldingLimit: true

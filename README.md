@@ -32,19 +32,18 @@ Webhook URL in the plugin configuration.
 - User-friendly command (`/relic`, used to check stats)
 - Simple leaderboard available to all (`/relic lb`)
 - Easy-to-use administration command (`/relicmgr`)
-    - Note that, at present, this command's responses are very silly :3
+    - Note that, at present, this command's responses are very cute :3
 - Event can be disabled, preventing collection and redemption of relics.
     - This is best used during setup, but also allows breaks in the event.
 - Simple, readable data storage (no database required!)
 - Easy-to-use configuration file
-- Relic holding limits (players can only redeem one relic at a time)
-- Relic trading prevention (relics can only be redeemed by the player who collected them)
+- Relic holding limits (players can only redeem one relic at a time) (toggleable with `EnforceHoldingLimit` in `config.yml`)
+- Relic trading prevention (relics can only be redeemed by the player who collected them) (toggleable with `EnforceNoTrading` in `config.yml`)
 - Discord Webhook integration (sends a message when a relic is claimed)
+- As well as many more!
 
 ## Planned Features
 All of these are coming soon!
-- Toggleable holding limits and trading prevention
-- Tagging relic items with the relic's UUID
 - Relic removal (currently the only way to remove a relic is to claim it)
 - Command to pick a redemption spot (right now the coordinates have to be set manually)
 - Command to randomly place relics around the server (will not work in the nether and end due to limitations)
@@ -59,7 +58,7 @@ This guide is for developers looking to modify/build the plugin.
 1. Download the source code from this repository.
 2. Make sure you have Java 21 installed on your system.
 3. Open a terminal and navigate to the plugin's directory.
-4. Run `./gradlew build`. 
+4. Run `./gradlew build`. (If on Windows, use `gradlew.bat build` instead)
 5. Find the finished plugin in `build/libs` and upload it to your server's `plugins` folder.
 6. Restart your server, and follow the steps from the setup guide.
 ### Contributing

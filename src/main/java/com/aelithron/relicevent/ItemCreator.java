@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemCreator {
-    public static ItemStack createRelicItem(Player finder) {
+    public static ItemStack createRelicItem(Player finder, String relicID) {
         ItemStack relic = new ItemStack(Material.AMETHYST_SHARD);
         ItemMeta relicMeta = relic.getItemMeta();
         assert relicMeta != null;
@@ -35,6 +35,7 @@ public class ItemCreator {
         NBT.modify(relic, nbt -> {
             nbt.setBoolean("RE_IsRelic", true);
             nbt.setString("RE_RelicObtainer", finder.getUniqueId().toString());
+            nbt.setString("RE_RelicID", relicID);
         });
         return relic;
     }

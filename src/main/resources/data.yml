@@ -14,6 +14,7 @@ Relics:
     z: 19999
     world: "world"
     found: true
+    redeemed: true
 
 Players:
   # The following is a real player.
