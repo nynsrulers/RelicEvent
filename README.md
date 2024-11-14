@@ -6,6 +6,11 @@ The Relic Event is a simple event plugin built for Minecraft servers.
 It is very vanilla-friendly, though it only works on SpigotMC servers (and forks).
 This plugin was originally built in only eleven hours (7 PM to 6 AM, nearly non-stop coding).
 
+## License
+<a href="https://oql.avris.it/license/v1.2?c=Aelithron%7Chttps%3A%2F%2Fgithub.com%2Faelithron" target="_blank" rel="noopener"><img src="https://badgers.space/badge/License/OQL/pink" alt="License: OQL" style="vertical-align: middle;"/></a>
+
+This project uses the 🏳️‍🌈 **Opinionated Queer License**. The full license can be read in [LICENSE.md](https://github.com/aelithron/RelicEvent/tree/main/LICENSE.md), and a TL;DR can be found [here](https://oql.avris.it/license.tldr).
+
 ## Setup
 This simple guide will help anyone set up the plugin.
 1. Download the latest plugin release and upload it to your server's `plugins` folder, then restart your server.
