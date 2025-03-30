@@ -6,10 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -239,6 +236,10 @@ public class RelicListener implements Listener {
         if (e.getEntity() instanceof Player player) {
             if (plugin.playerHasRelicItem(player) || (plugin.dataStore.isSet("Players." + player.getUniqueId()) && plugin.dataStore.getInt("Players." + player.getUniqueId()) > 0)) {
                 e.setCancelled(true);
+                if (e.getEntity().isDead()) {
+                    return;
+                }
+                ((LivingEntity) e).setGliding(false);
                 player.sendMessage(plugin.getPrefix() + ChatColor.RED + "You cannot use elytra, as you are playing in the Relic Event!");
             }
         }
