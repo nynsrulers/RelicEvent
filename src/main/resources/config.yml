@@ -31,3 +31,24 @@ EnforceNoTrade: true
 # If enabled, players cannot pick up two relics at the same time.
 # This means that they must redeem the first before collecting the second.
 EnforceHoldingLimit: true
+
+# Economy
+# Should the plugin use an economy system?
+# This depends on Vault.
+# Will not alter existing relic holograms, set before placing relics!
+UseEconomy: true
+
+# Economy price
+# The price for redeeming a relic.
+# Will not alter existing relic holograms, set before placing relics!
+EconomyPrice: 500
+
+# Economy Symbol
+# The symbol used for the economy setting.
+# Will not alter existing relic holograms, set before placing relics!
+EconomySymbol: "$"
+
+# Elytra Disabler
+# If this is enabled, players with at least one redeemed relic cannot use elytra.
+# This only applies to the overworld, and makes the event more fun (if overworld relics are on the surface, at least).
+ElytraDisabler: true

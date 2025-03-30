@@ -6,6 +6,8 @@ prefix: Relic Event
 authors: [Aelithron]
 depend:
   - NBTAPI
+softdepend:
+  - Vault
 description: A relic event, created for the Not-yet-named Server!
 website: https://github.com/aelithron/RelicEvent
 commands:

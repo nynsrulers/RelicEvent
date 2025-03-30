@@ -2,6 +2,8 @@ package com.aelithron.relicevent;
 
 import java.awt.*;
 import java.io.IOException;
+import java.net.URISyntaxException;
+
 import org.bukkit.entity.Player;
 
 public class WebhookNotifier {
@@ -29,7 +31,7 @@ public class WebhookNotifier {
         );
         try {
             webhook.execute();
-        } catch (IOException error) {
+        } catch (IOException | URISyntaxException error) {
             plugin.getLogger().severe("Error sending webhook!");
             error.printStackTrace();
         }
@@ -60,7 +62,7 @@ public class WebhookNotifier {
                 );
         try {
             webhook.execute();
-        } catch (IOException error) {
+        } catch (IOException | URISyntaxException error) {
             plugin.getLogger().severe("Error sending webhook!");
             error.printStackTrace();
         }

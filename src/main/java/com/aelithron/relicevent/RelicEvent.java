@@ -1,11 +1,13 @@
 package com.aelithron.relicevent;
 
 import de.tr7zw.nbtapi.NBT;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -22,6 +24,8 @@ public final class RelicEvent extends JavaPlugin {
     YamlConfiguration dataStore;
     // Actual "File" objects (used for reloading)
     private File dataStoreFile;
+    // Vault
+    private static Economy econ = null;
 
     @Override
     public void onEnable() {
@@ -39,6 +43,11 @@ public final class RelicEvent extends JavaPlugin {
         // Commands
         getCommand("relics").setExecutor(new RelicCMD(this));
         getCommand("relicmgr").setExecutor(new RelicAdminCMD(this));
+        // Vault
+        if (getConfig().getBoolean("UseEconomy") && !setupEconomy()) {
+            getLogger().severe("Couldn't set up the economy API (with Vault)!");
+            return;
+        }
     }
 
     @Override
@@ -97,5 +106,21 @@ public final class RelicEvent extends JavaPlugin {
             if (isRelic) { hasRelic = true; }
         }
         return hasRelic;
+    }
+
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
+    }
+
+    public static Economy getEconomy() {
+        return econ;
     }
 }

@@ -14,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
@@ -135,6 +136,17 @@ public class RelicListener implements Listener {
                     player.sendMessage(plugin.getPrefix() + ChatColor.RED + "The event is currently disabled, sorry!");
                     return;
                 }
+                if (plugin.dataStore.getBoolean(checkPath + "found")) {
+                    player.sendMessage(plugin.getPrefix() + ChatColor.RED + "This relic has already been found!");
+                    return;
+                }
+                if (plugin.getConfig().getBoolean("UseEconomy") && plugin.getConfig().getInt("EconomyPrice") > 0) {
+                    if (RelicEvent.getEconomy().getBalance(player) < plugin.getConfig().getInt("EconomyPrice")) {
+                        player.sendMessage(plugin.getPrefix() + ChatColor.RED + "You do not have enough money to claim this relic (Requires " + plugin.getConfig().getString("EconomySymbol") + plugin.getConfig().getInt("EconomyPrice") + ")!");
+                        return;
+                    }
+                    RelicEvent.getEconomy().withdrawPlayer(player, plugin.getConfig().getInt("EconomyPrice"));
+                }
                 if (plugin.playerHasRelicItem(player) && plugin.getConfig().getBoolean("EnforceNoTrade")) {
                     player.sendMessage(plugin.getPrefix() + ChatColor.RED + "Your relic claim failed, as you already have a relic in your inventory.");
                     player.sendMessage(ChatColor.AQUA + "Please redeem your first relic at spawn before collecting any more.");
@@ -191,13 +203,21 @@ public class RelicListener implements Listener {
             return;
         }
         ArmorStand hologram = blockPlaceLoc.getWorld().spawn(new Location(blockPlaceLoc.getWorld(),
-                blockPlaceLoc.getBlockX() + 0.5F, blockPlaceLoc.getBlockY(), blockPlaceLoc.getBlockZ() + 0.5F), ArmorStand.class);
+                blockPlaceLoc.getBlockX() + 0.5F, blockPlaceLoc.getBlockY() - 0.5F, blockPlaceLoc.getBlockZ() + 0.5F), ArmorStand.class);
         hologram.setInvisible(true);
         hologram.setGravity(false);
         hologram.setInvulnerable(true);
         hologram.setCustomNameVisible(true);
         hologram.setCustomName(ChatColor.GOLD + "Relic " + ChatColor.GRAY + "(Click/Tap)");
-
+        if (plugin.getConfig().getBoolean("UseEconomy") && plugin.getConfig().getInt("EconomyPrice") > 0) {
+            ArmorStand hologram2 = blockPlaceLoc.getWorld().spawn(new Location(blockPlaceLoc.getWorld(),
+                    blockPlaceLoc.getBlockX() + 0.5F, blockPlaceLoc.getBlockY() - 0.75F, blockPlaceLoc.getBlockZ() + 0.5F), ArmorStand.class);
+            hologram2.setInvisible(true);
+            hologram2.setGravity(false);
+            hologram2.setInvulnerable(true);
+            hologram2.setCustomNameVisible(true);
+            hologram2.setCustomName(ChatColor.AQUA + "Cost: " + ChatColor.BLUE + plugin.getConfig().getString("EconomySymbol") + plugin.getConfig().getInt("EconomyPrice"));
+        }
         UUID relicID = UUID.randomUUID();
         plugin.reloadDataStore();
         plugin.dataStore.set("Relics." + relicID + ".x", blockPlaceLoc.getBlockX());
@@ -209,5 +229,18 @@ public class RelicListener implements Listener {
         plugin.saveDataStore();
 
         player.sendMessage(plugin.getPrefix() + ChatColor.GREEN + "Successfully added a Relic!");
+    }
+
+    @EventHandler
+    public void openElytra(EntityToggleGlideEvent e) {
+        if (!plugin.getConfig().getBoolean("EventEnabled") || !plugin.getConfig().getBoolean("ElytraDisabler")) {
+            return;
+        }
+        if (e.getEntity() instanceof Player player) {
+            if (plugin.playerHasRelicItem(player) || (plugin.dataStore.isSet("Players." + player.getUniqueId()) && plugin.dataStore.getInt("Players." + player.getUniqueId()) > 0)) {
+                e.setCancelled(true);
+                player.sendMessage(plugin.getPrefix() + ChatColor.RED + "You cannot use elytra, as you are playing in the Relic Event!");
+            }
+        }
     }
 }

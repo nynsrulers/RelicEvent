@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.aelithron'
-version = '1.0.0'
+version = '1.0.1'
 
 repositories {
     mavenCentral()
@@ -19,11 +19,16 @@ repositories {
         name = "CodeMC"
         url = uri("https://repo.codemc.io/repository/maven-public/")
     }
+    maven {
+        name = "Jitpack"
+        url = "https://jitpack.io"
+    }
 }
 
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT"
     compileOnly "de.tr7zw:item-nbt-api-plugin:2.13.2"
+    compileOnly "com.github.MilkBowl:VaultAPI:1.7"
 }
 
 def targetJavaVersion = 21
