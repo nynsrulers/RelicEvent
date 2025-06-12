@@ -210,4 +210,5 @@ public class RelicListener implements Listener {
 
         player.sendMessage(plugin.getPrefix() + ChatColor.GREEN + "Successfully added a Relic!");
     }
+
 }
