@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
@@ -168,6 +169,9 @@ public class RelicListener implements Listener {
                 player.sendMessage(plugin.getPrefix() + ChatColor.GOLD + "Congrats, you found a relic!");
                 player.sendMessage(ChatColor.GREEN + "Redeem it at spawn for it to count.");
 
+                if (plugin.getConfig().getBoolean("BloodforgedEvent")) {
+                    plugin.setAssassin(player.getUniqueId());
+                }
                 break;
             }
         }
@@ -241,6 +245,35 @@ public class RelicListener implements Listener {
                 }
                 ((LivingEntity) e).setGliding(false);
                 player.sendMessage(plugin.getPrefix() + ChatColor.RED + "You cannot use elytra, as you are playing in the Relic Event!");
+            }
+        }
+    }
+
+    @EventHandler
+    public void playerDeath(PlayerDeathEvent e) throws NullPointerException {
+        if (plugin.bloodforged.containsKey(e.getEntity().getUniqueId()) && plugin.bloodforged.get(e.getEntity().getUniqueId()) == Objects.requireNonNull(e.getEntity().getKiller()).getUniqueId()) {
+            for (ItemStack itemInInv : e.getEntity().getInventory().getContents()) {
+                if (itemInInv == null || itemInInv.getAmount() == 0 || itemInInv.getType() == Material.AIR) {
+                    continue;
+                }
+                boolean isRelic = NBT.get(itemInInv, nbt -> {
+                    return nbt.getBoolean("RE_IsRelic");
+                });
+                if (isRelic) {
+                    String obtainer = NBT.get(itemInInv, nbt -> {
+                        return nbt.getString("RE_RelicObtainer");
+                    });
+                    if (!Objects.equals(obtainer, e.getEntity().getUniqueId().toString())) continue;
+                    String relicID = NBT.get(itemInInv, nbt -> {
+                        return nbt.getString("RE_RelicID");
+                    });
+                    e.getDrops().remove(itemInInv);
+                    ItemCreator.createRelicItem(e.getEntity().getKiller(), relicID);
+                    e.getEntity().getKiller().sendMessage(plugin.getPrefix() + ChatColor.GREEN + "You assassinated your target successfully.");
+                    e.getEntity().getKiller().sendMessage(ChatColor.GOLD + "You got a relic!");
+                    plugin.bloodforged.remove(e.getEntity().getUniqueId());
+                    plugin.setAssassin(e.getEntity().getKiller().getUniqueId());
+                }
             }
         }
     }

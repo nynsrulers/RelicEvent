@@ -52,3 +52,7 @@ EconomySymbol: "$"
 # If this is enabled, players with at least one redeemed relic cannot use elytra.
 # This only applies to the overworld, and makes the event more fun (if overworld relics are on the surface, at least).
 ElytraDisabler: true
+
+# Bloodforged Event
+# Enables the Bloodforged feature. This is really complex to explain, so read the documentation!
+BloodforgedEvent: false

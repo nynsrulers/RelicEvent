@@ -3,6 +3,7 @@ package com.aelithron.relicevent;
 import de.tr7zw.nbtapi.NBT;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -12,12 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public final class RelicEvent extends JavaPlugin {
     // Files
@@ -26,6 +23,8 @@ public final class RelicEvent extends JavaPlugin {
     private File dataStoreFile;
     // Vault
     private static Economy econ = null;
+    // Bloodforged array
+    public Map<UUID, UUID> bloodforged = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -123,4 +122,22 @@ public final class RelicEvent extends JavaPlugin {
     public static Economy getEconomy() {
         return econ;
     }
+
+    public void setAssassin(UUID victimUUID) {
+        Player victim = getServer().getPlayer(victimUUID);
+        if (victim == null || !victim.isOnline()) return;
+        List<Player> onlinePlayers = (List<Player>) getServer().getOnlinePlayers()
+                .stream()
+                .filter(p -> !p.getUniqueId().equals(victimUUID))
+                .toList();
+        if (onlinePlayers.isEmpty()) return;
+        Player assassin = onlinePlayers.get(ThreadLocalRandom.current().nextInt(onlinePlayers.size()));
+        bloodforged.put(victimUUID, assassin.getUniqueId());
+        assassin.sendMessage(getPrefix() + ChatColor.RED + "You've been chosen to hunt " + ChatColor.BOLD + victim.getName() + ChatColor.RESET + ChatColor.RED + "!");
+        assassin.sendMessage(ChatColor.GRAY + "Last known location: " + ChatColor.WHITE + victim.getLocation().getBlockX()
+                + ", " + victim.getLocation().getBlockY()
+                + ", " + victim.getLocation().getBlockZ());
+        assassin.playSound(assassin.getLocation(), Sound.ENTITY_ENDERMAN_STARE, 1.0f, 1.0f);
+    }
+
 }
